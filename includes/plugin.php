@@ -5,6 +5,9 @@ namespace GroundhoggBuddyBoss;
 use Groundhogg\Admin\Admin_Menu;
 use Groundhogg\DB\Manager;
 use Groundhogg\Extension;
+use GroundhoggBuddyBoss\Admin\Buddy_Boss_Tab;
+use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Groups;
+use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Member_Types;
 
 class Plugin extends Extension{
 
@@ -23,7 +26,7 @@ class Plugin extends Extension{
      */
     public function includes()
     {
-//        require  GROUNDHOGG_BUDDY_BOSS_PATH . '/includes/functions.php';
+        require  GROUNDHOGG_BUDDY_BOSS_PATH . '/includes/functions.php';
     }
 
     /**
@@ -36,6 +39,13 @@ class Plugin extends Extension{
         $this->installer = new Installer();
         $this->updater = new Updater();
         $this->roles = new Roles();
+
+        new Groundhogg_Bb_Member_Types();
+        new Groundhogg_Bb_Groups();
+
+	    if ( is_admin() ) {
+		    new Buddy_Boss_Tab();
+	    }
     }
 
     /**
