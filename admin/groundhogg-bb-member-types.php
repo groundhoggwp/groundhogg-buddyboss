@@ -2,6 +2,7 @@
 
 namespace GroundhoggBuddyBoss\Admin;
 
+use Groundhogg\Contact;
 use function Groundhogg\get_contactdata;
 use function Groundhogg\get_request_var;
 use function Groundhogg\html;
@@ -17,7 +18,6 @@ class Groundhogg_Bb_Member_Types {
 		add_action( 'add_meta_boxes', [ $this, 'register_meta_boxes' ] );
 		add_action( 'save_post_bp-member-type', [ $this, 'save_data' ] );
 		add_action( 'bp_set_member_type', [ $this, 'apply_member_type_tag' ], 10, 3 );
-
 
 	}
 
@@ -35,9 +35,9 @@ class Groundhogg_Bb_Member_Types {
 
 
 		$post    = get_post_by_member_type( $member_type );
-		$contact = get_contactdata( $user_id, true );
+		$contact = new Contact( $user_id, true );
 
-		if ( $contact && $contact->exists() && $post->ID ) {
+		if ( $contact && $contact->exists() && $post && $post->ID ) {
 
 			foreach ( get_all_member_type( $member_type ) as $p ) {
 				$contact->remove_tag( get_post_meta( $p, 'groundhogg_tags'  ,true) );
@@ -67,7 +67,7 @@ class Groundhogg_Bb_Member_Types {
 
 		$post_id = $post->ID;
 
-		echo html()->wrap( html()->wrap( __( 'Add Tags', 'groundhogg' ), 'b' ), 'h3' );
+		echo html()->wrap( html()->wrap( __( 'Add Tags', 'groundhogg-buddyboss' ), 'b' ), 'h3' );
 
 		echo html()->tag_picker( [
 			'name'     => 'groundhogg_tags[]',
@@ -75,9 +75,9 @@ class Groundhogg_Bb_Member_Types {
 			'selected' => get_post_meta( $post_id, 'groundhogg_tags', true )
 		] );
 
-		echo html()->description( __( 'add tags', 'groundhogg-buddyboss' ) );
+		echo html()->description( __( 'Selected tags will be added to the contact when this member type assigned to the user.', 'groundhogg-buddyboss' ) );
 
-		echo html()->wrap( html()->wrap( __( 'Remove Tags', 'groundhogg' ), 'b' ), 'h3' );
+		echo html()->wrap( html()->wrap( __( 'Remove Tags', 'groundhogg-buddyboss' ), 'b' ), 'h3' );
 
 
 		echo html()->tag_picker( [
@@ -86,7 +86,7 @@ class Groundhogg_Bb_Member_Types {
 			'selected' => get_post_meta( $post_id, 'groundhogg_tags_remove', true )
 		] );
 
-		echo html()->description( __( 'Remove tag', 'groundhogg' ) );
+		echo html()->description( __( 'Selected tags will be removed from the contact when this member type assigned to the user.', 'groundhogg-buddyboss' ) );
 
 	}
 

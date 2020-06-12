@@ -2,8 +2,6 @@
 
 namespace GroundhoggBuddyBoss;
 
-use Groundhogg\Admin\Admin_Menu;
-use Groundhogg\DB\Manager;
 use Groundhogg\Extension;
 use GroundhoggBuddyBoss\Admin\Buddy_Boss_Tab;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Groups;
@@ -36,10 +34,6 @@ class Plugin extends Extension{
      */
     public function init_components()
     {
-        $this->installer = new Installer();
-        $this->updater = new Updater();
-        $this->roles = new Roles();
-
         new Groundhogg_Bb_Member_Types();
         new Groundhogg_Bb_Groups();
 
@@ -55,7 +49,7 @@ class Plugin extends Extension{
      */
     public function get_download_id()
     {
-        // TODO: Implement get_download_id() method.
+        return 52477;
     }
 
     /**

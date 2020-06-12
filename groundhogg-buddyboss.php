@@ -1,12 +1,12 @@
 <?php
 /*
  * Plugin Name: Groundhogg - BuddyBoss
- * Plugin URI:  https://www.groundhogg.io/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
+ * Plugin URI: https://www.groundhogg.io/downloads/buddy-boss/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Description: Integrate  Groundhogg wth BuddyBoss.
  * Version: 1.0
  * Author: Groundhogg Inc.
  * Author URI: https://www.groundhogg.io/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
- * Text Domain: groundhogg
+ * Text Domain: groundhogg-buddyboss
  * Domain Path: /languages
  *
  * Groundhogg is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ add_action( 'plugins_loaded', function () {
 	load_plugin_textdomain( GROUNDHOGG_BUDDY_BOSS_TEXT_DOMAIN, false, basename( dirname( __FILE__ ) ) . '/languages' );
 } );
 
-define( 'GROUNDHOGG_BUDDY_BOSS_TEXT_DOMAIN', 'groundhogg' );
+define( 'GROUNDHOGG_BUDDY_BOSS_TEXT_DOMAIN', 'groundhogg-buddyboss' );
 
 // Check PHP and WP are up to date!
 if ( check_wp_version() && check_php_version() ){

@@ -2,6 +2,7 @@
 
 namespace GroundhoggBuddyBoss\Admin;
 
+use Groundhogg\Contact;
 use function Groundhogg\get_contactdata;
 use function Groundhogg\get_request_var;
 use function Groundhogg\html;
@@ -27,7 +28,7 @@ class Groundhogg_Bb_Groups {
 	 * @param $user_id
 	 */
 	public function remove_group_tag( $group_id, $user_id ) {
-		$contact = get_contactdata( $user_id, true );
+		$contact = new Contact( $user_id, true );
 
 
 		if ( $contact && $contact->exists() &&  (bool) groups_get_groupmeta($group_id,'groundhogg_reverse_tags' ,true)) {
@@ -44,9 +45,9 @@ class Groundhogg_Bb_Groups {
 	 * @param $user_id
 	 */
 	public function add_group_tag( $group_id, $user_id ) {
-		$contact = get_contactdata( $user_id, true );
+		$contact = new Contact( $user_id, true );
 
-		if ( $contact && $contact->exists() ) {
+		if ( $contact && $contact->exists() && $group_id) {
 			$contact->apply_tag( groups_get_groupmeta( $group_id, 'groundhogg_tags', true ) );
 			$contact->remove_tag( groups_get_groupmeta( $group_id, 'groundhogg_tags_remove', true ) );
 
@@ -69,7 +70,7 @@ class Groundhogg_Bb_Groups {
 
 		$post_id = get_request_var( 'gid' );
 
-		echo html()->wrap( html()->wrap( __( 'Add Tags', 'groundhogg' ), 'b' ), 'h3' );
+		echo html()->wrap( html()->wrap( __( 'Add Tags', 'groundhogg-buddyboss' ), 'b' ), 'h3' );
 
 		echo html()->tag_picker( [
 			'name'     => 'groundhogg_tags[]',
@@ -79,7 +80,7 @@ class Groundhogg_Bb_Groups {
 
 		echo html()->description( __( 'This tag will be added to the contact when contact join this group.', 'groundhogg-buddyboss' ) );
 
-		echo html()->wrap( html()->wrap( __( 'Remove Tags', 'groundhogg' ), 'b' ), 'h3' );
+		echo html()->wrap( html()->wrap( __( 'Remove Tags', 'groundhogg-buddyboss' ), 'b' ), 'h3' );
 
 
 		echo html()->tag_picker( [
@@ -90,7 +91,7 @@ class Groundhogg_Bb_Groups {
 
 		echo html()->description( __( 'This tag will be removed from the contact when contact leave this group.', 'groundhogg-buddyboss' ) );
 
-		echo html()->wrap( html()->wrap( __( 'Reverse Tags on Leave Group', 'groundhogg' ), 'b' ), 'h3' );
+		echo html()->wrap( html()->wrap( __( 'Reverse Tags on Leave Group', 'groundhogg-buddyboss' ), 'b' ), 'h3' );
 
 		echo html()->checkbox( [
 			'name'    => 'groundhogg_reverse_tags',

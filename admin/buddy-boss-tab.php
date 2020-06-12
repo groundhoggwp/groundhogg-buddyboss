@@ -64,8 +64,8 @@ class Buddy_Boss_Tab extends Tab {
 			foreach ( $group_data[0]->fields as $field ) :
                 ?>
                     <tr>
-                        <th><label for="company_name"><?php echo _x( $field->name, 'groundhogg' ) ?></label></th>
-                        <td><label for="company_name"><?php echo _x( $field->data->value, 'groundhogg' ) ?></label></td>
+                        <th><label for="company_name"><?php echo _x( $field->name, 'groundhogg-buddyboss' ) ?></label></th>
+                        <td><label for="company_name"><?php echo _x( $field->data->value, 'groundhogg-buddyboss' ) ?></label></td>
                     </tr>
 				<?php
 			endforeach;
