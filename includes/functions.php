@@ -42,13 +42,14 @@ add_action( 'init', __NAMESPACE__ . '\add_tab' );
 
 function add_tab() {
 
-	global $bp;
-
+	if ( ! function_exists( 'bp_is_my_profile ' ) ) {
+		return;
+	}
 
 	if ( bp_is_my_profile() && defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
-
+		global $bp;
 		bp_core_new_subnav_item( array(
-			'name'            => __( 'Preferences' ,'groundhogg-buddyboss' ),
+			'name'            => __( 'Preferences', 'groundhogg-buddyboss' ),
 			'slug'            => 'manage-preference',
 			'parent_url'      => $bp->loggedin_user->domain . $bp->profile->slug . '/',
 			'parent_slug'     => $bp->profile->slug,
@@ -74,7 +75,7 @@ function display_preference_screen() {
  * Displays the title of the preference page
  */
 function preference_title() {
-	echo __( "Manage Preferences" ,'groundhogg-buddyboss'  );
+	echo __( "Manage Preferences", 'groundhogg-buddyboss' );
 }
 
 /**
@@ -114,4 +115,4 @@ function set_profile_picture( $profile_pic, $contact_id, $contact ) {
 	return $profile_pic;
 }
 
-add_filter( 'groundhogg/contact/profile_picture', __NAMESPACE__ . '\set_profile_picture' , 10 , 3 );
+add_filter( 'groundhogg/contact/profile_picture', __NAMESPACE__ . '\set_profile_picture', 10, 3 );

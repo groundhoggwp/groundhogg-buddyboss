@@ -62,6 +62,13 @@ class Plugin extends Extension{
         return GROUNDHOGG_BUDDY_BOSS_VERSION;
     }
 
+	public function get_dependent_plugins()
+	{
+		return [
+			'buddyboss-platform/bp-loader.php' => __( 'BuddyBoss Platform' )
+		];
+	}
+
     /**
      * @return string
      */
