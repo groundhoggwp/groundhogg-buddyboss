@@ -81,7 +81,7 @@ function preference_title() {
  */
 function preference_content() {
 
-	if ( get_post_var( 'tag_prefs' ) ) {
+	if ( wp_verify_nonce( get_post_var( 'tag_prefs_nonce' ), 'bp_save_tag_prefs' ) && get_post_var( 'tag_prefs' ) ) {
 		$contact = get_contactdata( get_current_user_id(), true );
 		if ( $contact && $contact->exists() ) {
 			\GroundhoggAdvancedPreferences\Plugin::$instance->preferences->save_tag_preferences( $contact, get_post_var( 'tag_prefs' ) );
@@ -89,6 +89,7 @@ function preference_content() {
 	}
 
 	echo "<form name='update-preference' method='post'>";
+	wp_nonce_field( 'bp_save_tag_prefs', 'tag_prefs_nonce' );
 	\GroundhoggAdvancedPreferences\Plugin::$instance->preferences->show_tag_preferences();
 	echo "<input type='submit' value='Save Changes'>";
 	echo "</form>";
@@ -104,13 +105,21 @@ function preference_content() {
  *
  * @return false|string
  */
-function set_profile_picture( $profile_pic, $contact_id, $contact ) {
+function set_profile_picture_from_bp( $profile_pic, $contact_id, $contact ) {
 
-	if ( get_avatar_url( $contact->get_user_id() ) ) {
-		return get_avatar_url( $contact->get_user_id() );
+	// Get the BB avatar url...
+	$avatar = bp_core_fetch_avatar( [
+		'item_id' => $contact->get_user_id(),
+		'object'  => 'user',
+		'type'    => 'thumb',
+		'html'    => false
+	] );
+
+	if ( $avatar ){
+		return $avatar;
 	}
 
 	return $profile_pic;
 }
 
-add_filter( 'groundhogg/contact/profile_picture', __NAMESPACE__ . '\set_profile_picture', 10, 3 );
+add_filter( 'groundhogg/contact/profile_picture', __NAMESPACE__ . '\set_profile_picture_from_bp', 10, 3 );
