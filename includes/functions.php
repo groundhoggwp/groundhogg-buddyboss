@@ -21,15 +21,12 @@ function get_post_by_member_type( $member_type ) {
 /**
  * Get all the member-type ids
  *
- * @param $member_type
- *
  * @return int[]
  */
-function get_all_member_type( $member_type ) {
-	$obj   = bp_get_member_type_object( $member_type );
+function get_all_member_types() {
+
 	$posts = get_posts( [
 		'post_type' => bp_get_member_type_post_type(),
-		'slug'      => $obj->directory_slug,
 	] );
 
 	return wp_parse_id_list( wp_list_pluck( $posts, 'ID' ) );
@@ -37,16 +34,18 @@ function get_all_member_type( $member_type ) {
 }
 
 
-add_action( 'init', __NAMESPACE__ . '\add_tab' );
+add_action( 'init', __NAMESPACE__ . '\add_preferences_tab' );
 
+/**
+ * Add the preferences tab to the profile
+ */
+function add_preferences_tab() {
 
-function add_tab() {
-
-	if ( ! function_exists( 'bp_is_my_profile ' ) ) {
+	if ( ! function_exists( 'bp_is_my_profile ' ) || ! defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
 		return;
 	}
 
-	if ( bp_is_my_profile() && defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
+	if ( bp_is_my_profile() ) {
 		global $bp;
 		bp_core_new_subnav_item( array(
 			'name'            => __( 'Preferences', 'groundhogg-buddyboss' ),
@@ -57,7 +56,6 @@ function add_tab() {
 			'position'        => 40
 		) );
 	}
-
 }
 
 /**

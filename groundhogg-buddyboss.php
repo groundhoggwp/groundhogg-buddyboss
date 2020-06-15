@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'GROUNDHOGG_BUDDY_BOSS_VERSION', '1.0' );
 define( 'GROUNDHOGG_BUDDY_BOSS_PREVIOUS_STABLE_VERSION', '0.1' );
-define( 'GROUNDHOGG_BUDDY_BOSS_NAME', 'Buddy Booss' );
+define( 'GROUNDHOGG_BUDDY_BOSS_NAME', 'BuddyBoss' );
 
 define( 'GROUNDHOGG_BUDDY_BOSS__FILE__', __FILE__ );
 define( 'GROUNDHOGG_BUDDY_BOSS_PLUGIN_BASE', plugin_basename( GROUNDHOGG_BUDDY_BOSS__FILE__ ) );

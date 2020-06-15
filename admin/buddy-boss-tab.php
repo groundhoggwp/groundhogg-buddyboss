@@ -5,16 +5,7 @@ namespace GroundhoggBuddyBoss\Admin;
 
 use BP_XProfile_Data_Template;
 use BP_XProfile_Group;
-use BP_XProfile_ProfileData;
 use Groundhogg\Admin\Contacts\Tab;
-use Groundhogg\Plugin;
-use function Groundhogg\admin_page_url;
-use function Groundhogg\get_array_var;
-use function Groundhogg\get_date_time_format;
-use function Groundhogg\get_db;
-use function Groundhogg\get_form_list;
-use function Groundhogg\get_request_var;
-use function Groundhogg\html;
 
 class Buddy_Boss_Tab extends Tab {
 
