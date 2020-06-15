@@ -7,18 +7,6 @@ use function Groundhogg\get_contactdata;
 use function Groundhogg\get_post_var;
 
 /**
- * Get the post by the member type
- *
- * @return array|\WP_Post|null
- */
-function get_post_by_member_type( $member_type ) {
-	$post = get_page_by_path( $member_type, OBJECT, bp_get_member_type_post_type() );
-
-	return $post;
-}
-
-
-/**
  * Get all the member-type ids
  *
  * @return int[]
@@ -30,9 +18,7 @@ function get_all_member_types() {
 	] );
 
 	return wp_parse_id_list( wp_list_pluck( $posts, 'ID' ) );
-
 }
-
 
 add_action( 'init', __NAMESPACE__ . '\add_preferences_tab' );
 

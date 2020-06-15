@@ -20,15 +20,15 @@ class Buddy_Boss_Tab extends Tab {
 
 	public function content( $contact ) {
 
-	    if (! $contact->get_user_id() ){
-	        echo sprintf( "<p><h2> %s</h2></p>" ,__("This contact does not have any BuddyBoss data.", 'groundhogg-buddyboss'));
-	        return;
-        }
+		if ( ! $contact->get_user_id() ) {
+			echo sprintf( "<p><h2> %s</h2></p>", __( "This contact does not have any BuddyBoss data.", 'groundhogg-buddyboss' ) );
 
-	    echo sprintf( "<p><a href='%s' class='button secondary'>%s</a></p>", admin_url( 'users.php?page=bp-profile-edit&user_id=' . $contact->get_user_id() ) , 'Edit Profile');
+			return;
+		}
 
+		echo sprintf( "<p><a href='%s' class='button secondary'>%s</a></p>", admin_url( 'users.php?page=bp-profile-edit&user_id=' . $contact->get_user_id() ), __( 'Edit Profile', 'groundhogg-buddyboss' ) );
 
-	    $profile_template = new BP_XProfile_Data_Template( [
+		$profile_template = new BP_XProfile_Data_Template( [
 			'user_id' => $contact->get_user_id(),
 		] );
 
@@ -53,16 +53,15 @@ class Buddy_Boss_Tab extends Tab {
 
 			echo " <table class=\"form-table\">";
 			foreach ( $group_data[0]->fields as $field ) :
-                ?>
-                    <tr>
-                        <th><label for="company_name"><?php echo _x( $field->name, 'groundhogg-buddyboss' ) ?></label></th>
-                        <td><label for="company_name"><?php echo _x( $field->data->value, 'groundhogg-buddyboss' ) ?></label></td>
-                    </tr>
-				<?php
+				?>
+                <tr>
+                    <th><label><?php _e( $field->name, 'groundhogg-buddyboss' ) ?></label></th>
+                    <td><code><?php _e( $field->data->value, 'groundhogg-buddyboss' ) ?></code></td>
+                </tr>
+			<?php
 			endforeach;
 			echo "</table>";
 
 		}
-
 	}
 }
