@@ -41,7 +41,7 @@ add_action( 'init', __NAMESPACE__ . '\add_preferences_tab' );
  */
 function add_preferences_tab() {
 
-	if ( ! function_exists( 'bp_is_my_profile ' ) || ! defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
+	if ( ! function_exists( 'bp_is_my_profile' ) || ! defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
 		return;
 	}
 

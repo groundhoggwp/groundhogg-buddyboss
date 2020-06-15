@@ -30,10 +30,11 @@ class Groundhogg_Bb_Member_Types {
 	public function apply_member_type_tag( $user_id, $member_type, $append ) {
 
 
+
 		$post    = bp_member_type_post_by_type( $member_type );
 		$contact = new Contact( $user_id, true );
 
-		if ( $contact && $contact->exists() && $post && $post->ID ) {
+		if ( $contact && $contact->exists() && $post ){
 
 			// Remove the tags of other profile types...
 			foreach ( get_all_member_types() as $p ) {
@@ -41,8 +42,8 @@ class Groundhogg_Bb_Member_Types {
 			}
 
 			// Add the new profile tag and remove any associated tags
-			$contact->apply_tag( get_post_meta( $post->ID, 'groundhogg_tags' ,true ) );
-			$contact->remove_tag( get_post_meta( $post->ID, 'groundhogg_tags_remove' ,true ) );
+			$contact->apply_tag( get_post_meta( absint($post ), 'groundhogg_tags' ,true ) );
+			$contact->remove_tag( get_post_meta( absint( $post ), 'groundhogg_tags_remove' ,true ) );
 
 		}
 

@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Groundhogg - BuddyBoss\n"
-"POT-Creation-Date: 2020-06-12 11:22-0400\n"
-"PO-Revision-Date: 2020-06-12 11:22-0400\n"
+"POT-Creation-Date: 2020-06-15 09:14-0400\n"
+"PO-Revision-Date: 2020-06-15 09:14-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,59 +21,61 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: admin/buddy-boss-tab.php:26
+#: admin/buddy-boss-tab.php:17
 msgid "BuddyBoss"
 msgstr ""
 
-#: admin/buddy-boss-tab.php:33
+#: admin/buddy-boss-tab.php:24
 msgid "This contact does not have any BuddyBoss data."
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:60 admin/groundhogg-bb-member-types.php:57
+#: admin/groundhogg-bb-groups.php:53 admin/groundhogg-bb-member-types.php:57
 #, php-format
 msgid "%s Integration"
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:73 admin/groundhogg-bb-member-types.php:70
+#: admin/groundhogg-bb-groups.php:70 admin/groundhogg-bb-member-types.php:74
 msgid "Add Tags"
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:81
-msgid "This tag will be added to the contact when contact join this group."
+#: admin/groundhogg-bb-groups.php:78
+msgid ""
+"The selected tags will be added to the contact when they join the group."
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:83 admin/groundhogg-bb-member-types.php:80
+#: admin/groundhogg-bb-groups.php:80 admin/groundhogg-bb-member-types.php:84
 msgid "Remove Tags"
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:92
+#: admin/groundhogg-bb-groups.php:88
 msgid ""
-"This tag will be removed from the contact when contact leave this group."
+"The selected tags will be removed from the contact when they leave the group."
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:94
-msgid "Reverse Tags on Leave Group"
+#: admin/groundhogg-bb-groups.php:90
+msgid "Reverse Tags"
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:100
+#: admin/groundhogg-bb-groups.php:96
 msgid "Enable"
 msgstr ""
 
-#: admin/groundhogg-bb-groups.php:103
+#: admin/groundhogg-bb-groups.php:99
 msgid ""
-"Enabling this option will remove all the applied tag and applied all the "
-"remove tag to the contact when contact leave the group."
+"When the contact leaves the group this will reverse the tags. Any tags which "
+"were added will be removed and any tags which were removed will be added."
 msgstr ""
 
-#: admin/groundhogg-bb-member-types.php:78
+#: admin/groundhogg-bb-member-types.php:82
 msgid ""
-"Selected tags will be added to the contact when this member type assigned to "
-"the user."
+"The selected tags will be added to the contact when this profile type "
+"assigned to the user. If the profile type is changed the tag will be removed "
+"automatically."
 msgstr ""
 
-#: admin/groundhogg-bb-member-types.php:89
+#: admin/groundhogg-bb-member-types.php:92
 msgid ""
-"Selected tags will be removed from the contact when this member type "
+"The selected tags will be removed from the contact when this member type "
 "assigned to the user."
 msgstr ""
 
@@ -105,8 +107,12 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: includes/functions.php:77
+#: includes/functions.php:76
 msgid "Manage Preferences"
+msgstr ""
+
+#: includes/plugin.php:63
+msgid "BuddyBoss Platform"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
