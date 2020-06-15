@@ -3,8 +3,10 @@
 namespace GroundhoggBuddyBoss;
 
 use Groundhogg\Contact;
+use Groundhogg\Tag;
 use function Groundhogg\get_contactdata;
-use function Groundhogg\get_post_var;
+use function Groundhogg\get_request_var;
+use function GroundhoggAdvancedPreferences\get_preference_tag_ids;
 
 /**
  * Get all the member-type ids
@@ -20,67 +22,128 @@ function get_all_member_types() {
 	return wp_parse_id_list( wp_list_pluck( $posts, 'ID' ) );
 }
 
-add_action( 'init', __NAMESPACE__ . '\add_preferences_tab' );
+add_action( 'bp_notification_settings', __NAMESPACE__ . '\display_preference_screen', 1 );
 
 /**
- * Add the preferences tab to the profile
+ * Show groundhogg preferences
  */
-function add_preferences_tab() {
+function display_preference_screen() {
 
-	if ( ! function_exists( 'bp_is_my_profile' ) || ! defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
+	if ( ! function_exists( 'bp_is_my_profile' ) || ! bp_is_my_profile() || ! defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ) {
 		return;
 	}
 
-	if ( bp_is_my_profile() ) {
-		global $bp;
-		bp_core_new_subnav_item( array(
-			'name'            => __( 'Preferences', 'groundhogg-buddyboss' ),
-			'slug'            => 'manage-preference',
-			'parent_url'      => $bp->loggedin_user->domain . $bp->profile->slug . '/',
-			'parent_slug'     => $bp->profile->slug,
-			'screen_function' => __NAMESPACE__ . '\display_preference_screen',
-			'position'        => 40
-		) );
+	$contact = get_contactdata();
+
+	if ( ! $contact ) {
+		return;
+	}
+
+	?>
+
+    <table class="notification-settings" id="groundhogg-notification-settings">
+        <thead>
+        <tr>
+            <th class="icon"></th>
+            <th class="title"><?php _e( 'Marketing Messages', 'groundhogg-buddyboss' ); ?></th>
+            <th class="yes"><?php _e( 'Yes', 'groundhogg-buddyboss' ); ?></th>
+            <th class="no"><?php _e( 'No', 'groundhogg-buddyboss' ); ?></th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+		<?php
+
+		$contact = get_contactdata();
+
+		$tag_ids = get_preference_tag_ids( $contact->get_id() );
+
+		foreach ( $tag_ids as $tag_id ):
+
+			$tag = new Tag( $tag_id );
+
+			$label = $tag->get_name();
+			$class = $tag->get_slug();
+			$description = $tag->get_description();
+
+			?>
+
+            <tr id="groundhogg-notification-settings-<?php esc_attr_e( $class ); ?>">
+                <td></td>
+                <td>
+	                <?php _e( $label ); ?>
+	                <?php if ( $description ) : ?>
+	                    <?php _e( ' - ' ); ?>
+	                    <i><?php _e( $description ); ?></i>
+					<?php endif; ?>
+                </td>
+                <td class="yes">
+                    <div class="bp-radio-wrap">
+                        <input type="radio" name="<?php esc_attr_e( sprintf('tag_prefs[%d]', $tag_id ) ); ?>"
+                               id="notification-messages-<?php esc_attr_e( $class ); ?>-yes" class="bs-styled-radio"
+                               value="1" <?php checked( $contact->has_tag( $tag_id ), true, true ); ?> />
+                        <label for="notification-messages-<?php esc_attr_e( $class ); ?>-yes"><span
+                                    class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+                    </div>
+                </td>
+                <td class="no">
+                    <div class="bp-radio-wrap">
+                        <input type="radio" name="<?php esc_attr_e( sprintf('tag_prefs[%d]', $tag_id ) ); ?>"
+                               id="notification-messages-<?php esc_attr_e( $class ); ?>-no" class="bs-styled-radio"
+                               value="0" <?php checked( $contact->has_tag( $tag_id ), false, true ); ?> />
+                        <label for="notification-messages-<?php esc_attr_e( $class ); ?>-no"><span
+                                    class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+                    </div>
+                </td>
+            </tr>
+
+		<?php
+
+		endforeach;
+
+		/**
+		 * Fires inside the closing </tbody> tag for messages screen notification settings.
+		 *
+		 * @since BuddyPress 1.0.0
+		 */
+		do_action( 'groundhogg_buddyboss_marketing_notifications_screen' );
+		?>
+        </tbody>
+    </table>
+
+	<?php
+
+}
+
+add_action( 'bp_core_notification_settings_after_save', __NAMESPACE__ . '\save_tag_preferences' );
+
+/**
+ * Save the tag preferences!
+ */
+function save_tag_preferences(){
+
+	$contact = get_contactdata();
+
+	if ( ! $contact  || ! defined( 'GROUNDHOGG_ADVANCED_PREFERENCES_VERSION' ) ){
+		return;
+	}
+
+	$all_tags  = get_preference_tag_ids( $contact->get_id() ); // PB: Added parameter to updated function
+	$passed_preferences = array_filter( get_request_var( 'tag_prefs', [] ) );
+
+	if ( ! empty( $all_tags ) ){
+		$tag_prefs = wp_parse_id_list( array_keys( $passed_preferences ) );
+
+		$remove_tags = array_values( array_diff( $all_tags, $tag_prefs ) );
+		$add_tags    = array_values( array_intersect( $all_tags, $tag_prefs ) );
+
+		$contact->remove_tag( $remove_tags );
+		$contact->add_tag( $add_tags );
 	}
 }
 
-/**
- * add hooks to display page details.
- */
-function display_preference_screen() {
-	//add title and content here – last is to call the members plugin.php template
-	add_action( 'bp_template_title', __NAMESPACE__ . '\preference_title' );
-	add_action( 'bp_template_content', __NAMESPACE__ . '\preference_content' );
-	bp_core_load_template( 'members/single/plugins' );
-
-}
-
-/**
- * Displays the title of the preference page
- */
-function preference_title() {
-	echo __( "Manage Preferences", 'groundhogg-buddyboss' );
-}
-
-/**
- * Displays the content
- */
-function preference_content() {
-
-	if ( wp_verify_nonce( get_post_var( 'tag_prefs_nonce' ), 'bp_save_tag_prefs' ) && get_post_var( 'tag_prefs' ) ) {
-		$contact = get_contactdata( get_current_user_id(), true );
-		if ( $contact && $contact->exists() ) {
-			\GroundhoggAdvancedPreferences\Plugin::$instance->preferences->save_tag_preferences( $contact, get_post_var( 'tag_prefs' ) );
-		}
-	}
-
-	echo "<form name='update-preference' method='post'>";
-	wp_nonce_field( 'bp_save_tag_prefs', 'tag_prefs_nonce' );
-	\GroundhoggAdvancedPreferences\Plugin::$instance->preferences->show_tag_preferences();
-	echo "<input type='submit' value='Save Changes'>";
-	echo "</form>";
-
-}
+add_filter( 'groundhogg/contact/profile_picture', __NAMESPACE__ . '\set_profile_picture_from_bp', 10, 3 );
 
 /**
  * Display profile picture from the buddy boss area.
@@ -101,11 +164,9 @@ function set_profile_picture_from_bp( $profile_pic, $contact_id, $contact ) {
 		'html'    => false
 	] );
 
-	if ( $avatar ){
+	if ( $avatar ) {
 		return $avatar;
 	}
 
 	return $profile_pic;
 }
-
-add_filter( 'groundhogg/contact/profile_picture', __NAMESPACE__ . '\set_profile_picture_from_bp', 10, 3 );
