@@ -35,6 +35,8 @@ class Plugin extends Extension {
 		new Groundhogg_Bb_Member_Types();
 		new Groundhogg_Bb_Groups();
 
+		$this->bb_replacement  = new Bb_Replacements();
+
 		if ( is_admin() ) {
 			new Buddy_Boss_Tab();
 		}
