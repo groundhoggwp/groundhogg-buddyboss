@@ -7,7 +7,6 @@ use Groundhogg\Preferences;
 use Groundhogg\Tag;
 use function Groundhogg\get_contactdata;
 use function Groundhogg\get_request_var;
-use function GroundhoggAdvancedPreferences\get_preference_tag_ids;
 
 /**
  * Get all the member-type ids
@@ -180,3 +179,80 @@ function confirm_user_email_when_user_gets_activated( $user_id, $key, $user ) {
 }
 
 add_action( 'bp_core_activated_user', __NAMESPACE__ . '\confirm_user_email_when_user_gets_activated', 10, 3 );
+
+/**
+ *  ###########  TOOLS  ###########
+ */
+/**
+ * Displays Validate email button inside tools page of Groundhogg
+ *
+ * @param $page
+ */
+function display_settings( $page ) {
+	?>
+    <div class="show-upload-view">
+        <div class="upload-plugin-wrap">
+            <div class="upload-plugin">
+                <p class="install-help"><?php _e( 'Buddy Boss', 'groundhogg-buddyboss' ); ?></p>
+                <form method="post" class="gh-tools-box">
+					<?php wp_nonce_field(); ?>
+					<?php echo \Groundhogg\Plugin::$instance->utils->html->input( [
+						'type'  => 'hidden',
+						'name'  => 'action',
+						'value' => 'bb_sync_groups_and_member_types',
+					] ); ?>
+                    <p><?php _e( 'Sync group and profile type tags based on the current settings. This will add any missing tags to contacts based on their currently active groups and profile type. Tags with associated groups the contact does not belong to will be removed, as will any profile type tags.', 'groundhogg-buddyboss' ); ?></p>
+                    <p class="submit" style="text-align: center;padding-bottom: 0;margin: 0;">
+                        <button class="button-primary big-button" name="validate_contacts"
+                                value="sync"><?php _ex( 'Start Sync', 'action', 'groundhogg-buddyboss' ); ?></button>
+                    </p>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+	<?php
+}
+
+add_action( 'groundhogg/admin/gh_tools/display/buddyboss_view', __NAMESPACE__ . '\display_settings', 10 );
+
+
+/**
+ * code to start the bulk job
+ */
+
+/**
+ * Start's the bulk from the tools page
+ *
+ * @return mixed
+ */
+function sync_groups_and_member_types( $exitcode ) {
+
+	\Groundhogg\Plugin::$instance->bulk_jobs->sync_groups_and_member_types->start();
+
+	return $exitcode;
+}
+
+add_filter( 'groundhogg/admin/gh_tools/process/bb_sync_groups_and_member_types', __NAMESPACE__ . '\sync_groups_and_member_types', 10 );
+
+
+/**
+ * Adds new tab inside Groundhogg Tools page
+ *
+ * @param $tags
+ *
+ * @return array
+ */
+function tools_tab( $tags ) {
+	$tags [] = [
+		'name' => __( 'Buddy Boss' ),
+		'slug' => 'buddyboss'
+	];
+
+	return $tags;
+}
+
+add_filter( 'groundhogg/admin/tools/tabs', __NAMESPACE__ . '\tools_tab', 10 );

@@ -3,7 +3,7 @@
  * Plugin Name: Groundhogg - BuddyBoss
  * Plugin URI: https://www.groundhogg.io/downloads/buddy-boss/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Description: Integrate Groundhogg wth BuddyBoss.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Groundhogg Inc.
  * Author URI: https://www.groundhogg.io/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * Text Domain: groundhogg-buddyboss
@@ -25,8 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'GROUNDHOGG_BUDDY_BOSS_VERSION', '1.0.4' );
-define( 'GROUNDHOGG_BUDDY_BOSS_PREVIOUS_STABLE_VERSION', '1.0.3' );
+define( 'GROUNDHOGG_BUDDY_BOSS_VERSION', '1.0.5' );
+define( 'GROUNDHOGG_BUDDY_BOSS_PREVIOUS_STABLE_VERSION', '1.0.4' );
 define( 'GROUNDHOGG_BUDDY_BOSS_NAME', 'BuddyBoss' );
 
 define( 'GROUNDHOGG_BUDDY_BOSS__FILE__', __FILE__ );

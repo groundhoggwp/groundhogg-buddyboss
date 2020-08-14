@@ -6,6 +6,7 @@ use Groundhogg\Extension;
 use GroundhoggBuddyBoss\Admin\Buddy_Boss_Tab;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Groups;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Member_Types;
+use GroundhoggBuddyBoss\Bulk_Jobs\Sync_Groups_And_Member_Types;
 
 class Plugin extends Extension {
 
@@ -51,6 +52,12 @@ class Plugin extends Extension {
 		return 52477;
 	}
 
+
+	public function register_bulk_jobs( $manager )
+	{
+		$manager->sync_groups_and_member_types = new Sync_Groups_And_Member_Types();
+	}
+
 	/**
 	 * Get the version #
 	 *
@@ -72,6 +79,9 @@ class Plugin extends Extension {
 	public function get_plugin_file() {
 		return GROUNDHOGG_BUDDY_BOSS__FILE__;
 	}
+
+
+
 
 	/**
 	 * Register autoloader.
