@@ -7,6 +7,7 @@ use Groundhogg\Preferences;
 use Groundhogg\Tag;
 use function Groundhogg\get_contactdata;
 use function Groundhogg\get_request_var;
+use function GroundhoggAdvancedPreferences\get_preference_tag_ids;
 
 /**
  * Get all the member-type ids
