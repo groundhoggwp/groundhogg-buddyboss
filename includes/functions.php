@@ -2,11 +2,16 @@
 
 namespace GroundhoggBuddyBoss;
 
+use BP_XProfile_Field;
 use Groundhogg\Contact;
 use Groundhogg\Preferences;
 use Groundhogg\Tag;
+use function Groundhogg\generate_contact_with_map;
+use function Groundhogg\get_array_var;
 use function Groundhogg\get_contactdata;
+use function Groundhogg\get_mappable_fields;
 use function Groundhogg\get_request_var;
+use function Groundhogg\html;
 use function GroundhoggAdvancedPreferences\get_preference_tag_ids;
 
 /**
@@ -214,7 +219,6 @@ function display_settings( $page ) {
     </div>
 
 
-
 	<?php
 }
 
@@ -257,3 +261,57 @@ function tools_tab( $tags ) {
 }
 
 add_filter( 'groundhogg/admin/tools/tabs', __NAMESPACE__ . '\tools_tab', 10 );
+
+
+function create_contact_using_buddyboss() {
+
+	$field_map = array_merge( (array) get_option( 'gh_bb_field_map' ), [ 'signup_email' => 'email' ] );
+
+	generate_contact_with_map( $_POST, $field_map );
+}
+
+add_action( 'bp_complete_signup', __NAMESPACE__ . '\create_contact_using_buddyboss', 10 );
+
+
+/**
+ * Adds section inside Buddyboss fields to set
+ *
+ * @param $field BP_XProfile_Field
+ */
+function add_groundhogg_field_picker( $field ) {
+	?>
+    <div class="postbox">
+        <h2>
+            <label for="default-visibility"><?php esc_html_e( 'Groundhogg Field Map', 'groundhogg-buddyboss' ); ?></label>
+        </h2>
+        <div class="inside">
+            <div>
+				<?php echo html()->dropdown( [
+					'option_none' => '* Do Not Map *',
+					'options'     => get_mappable_fields(),
+					'selected'    => get_array_var( get_option( 'gh_bb_field_map' ), 'field_' . $field->id, '' ),
+					'name'        => 'gh_field_map',
+				] ) ?>
+            </div>
+        </div>
+    </div>
+	<?php
+}
+
+add_action( 'xprofile_field_after_sidebarbox', __NAMESPACE__ . '\add_groundhogg_field_picker', 10 );
+
+/**
+ * saves the field map into the custom meta
+ *
+ * @param $field BP_XProfile_Field
+ */
+function save_bb_map( $field ) {
+
+	if ( get_request_var( 'gh_field_map' ) ) {
+		$field_map                           = get_option( 'gh_bb_field_map' );
+		$field_map [ 'field_' . $field->id ] = get_request_var( 'gh_field_map' );
+		update_option( 'gh_bb_field_map', $field_map );
+	}
+}
+
+add_action( 'xprofile_fields_saved_field', __NAMESPACE__ . '\save_bb_map', 10 );
