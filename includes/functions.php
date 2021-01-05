@@ -315,3 +315,20 @@ function save_bb_map( $field ) {
 }
 
 add_action( 'xprofile_fields_saved_field', __NAMESPACE__ . '\save_bb_map', 10 );
+
+
+function update_contact_fields_on_save( $field_data ) {
+
+	$field_map = get_option( 'gh_bb_field_map' );
+	if ( $field_map && array_key_exists( 'field_' . $field_data->field_id, $field_map ) ) {
+
+		$contact = get_contactdata( $field_data->user_id, true );
+		if ( $contact ) {
+			generate_contact_with_map( [
+				'email'                          => $contact->get_email(),
+				'field_' . $field_data->field_id => $field_data->value
+			], array_merge($field_map , ['email' => 'email'] ) );
+		}
+	}
+}
+add_action( 'xprofile_data_after_save', __NAMESPACE__ . '\update_contact_fields_on_save' );
