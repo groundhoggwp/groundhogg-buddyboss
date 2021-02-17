@@ -3,6 +3,7 @@
 namespace GroundhoggBuddyBoss;
 
 use Groundhogg\Extension;
+use GroundhoggBuddyBoss\Admin\Buddy_Boss_Info_Card;
 use GroundhoggBuddyBoss\Admin\Buddy_Boss_Tab;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Groups;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Member_Types;
@@ -33,6 +34,8 @@ class Plugin extends Extension {
 	 * @return void
 	 */
 	public function init_components() {
+
+
 		new Groundhogg_Bb_Member_Types();
 		new Groundhogg_Bb_Groups();
 
@@ -50,6 +53,14 @@ class Plugin extends Extension {
 	 */
 	public function get_download_id() {
 		return 52477;
+	}
+
+	/**
+	 * @param \Groundhogg\Admin\Contacts\Info_Cards $cards
+	 */
+	public function register_contact_info_cards( $cards ) {
+//		$cards->e = new Buddy_Boss_Info_Card();
+		new Buddy_Boss_Info_Card($cards);
 	}
 
 
