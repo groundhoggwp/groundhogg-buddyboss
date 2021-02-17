@@ -39,11 +39,11 @@ class Plugin extends Extension {
 		new Groundhogg_Bb_Member_Types();
 		new Groundhogg_Bb_Groups();
 
-		$this->bb_replacement  = new Bb_Replacements();
+		$this->bb_replacement = new Bb_Replacements();
 
-		if ( is_admin() ) {
-			new Buddy_Boss_Tab();
-		}
+//		if ( is_admin() ) {
+//			new Buddy_Boss_Tab();
+//		}
 	}
 
 	/**
@@ -60,12 +60,11 @@ class Plugin extends Extension {
 	 */
 	public function register_contact_info_cards( $cards ) {
 //		$cards->e = new Buddy_Boss_Info_Card();
-		new Buddy_Boss_Info_Card($cards);
+		new Buddy_Boss_Info_Card( $cards );
 	}
 
 
-	public function register_bulk_jobs( $manager )
-	{
+	public function register_bulk_jobs( $manager ) {
 		$manager->sync_groups_and_member_types = new Sync_Groups_And_Member_Types();
 	}
 
@@ -90,8 +89,6 @@ class Plugin extends Extension {
 	public function get_plugin_file() {
 		return GROUNDHOGG_BUDDY_BOSS__FILE__;
 	}
-
-
 
 
 	/**

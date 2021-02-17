@@ -53,6 +53,7 @@ class Bb_Replacements {
 		if ( ! $contact->get_user_id() ) {
 			return '';
 		}
+
 		return  xprofile_get_field_data( $arg, $contact->get_user_id() ) ;
 	}
 
