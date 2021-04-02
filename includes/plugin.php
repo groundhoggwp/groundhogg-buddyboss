@@ -58,7 +58,7 @@ class Plugin extends Extension {
 	/**
 	 * @param \Groundhogg\Admin\Contacts\Info_Cards $cards
 	 */
-	public function register_contact_info_cards( $cards ) {
+	public function register_contact_info_cards1( $cards ) {
 //		$cards->e = new Buddy_Boss_Info_Card();
 		new Buddy_Boss_Info_Card( $cards );
 	}
@@ -103,6 +103,17 @@ class Plugin extends Extension {
 		require __DIR__ . '/autoloader.php';
 		Autoloader::run();
 	}
+	/**
+     * Register any info cards example
+     *
+     * @param \Groundhogg\Admin\Contacts\Info_Cards $cards
+     */
+    public function register_contact_info_cards( $cards ) {
+		
+		$cards::register( 'buddyboss-new-info-card', 'BuddyBoss', function ( $contact ) {
+            include( __DIR__ . '/../admin/cards/buddyboss.php' );
+        } );
+    }
 }
 
 Plugin::instance();
