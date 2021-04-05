@@ -3,7 +3,7 @@
 namespace GroundhoggBuddyBoss;
 
 use Groundhogg\Extension;
-use GroundhoggBuddyBoss\Admin\Buddy_Boss_Info_Card;
+//use GroundhoggBuddyBoss\Admin\Buddy_Boss_Info_Card;
 use GroundhoggBuddyBoss\Admin\Buddy_Boss_Tab;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Groups;
 use GroundhoggBuddyBoss\Admin\Groundhogg_Bb_Member_Types;
