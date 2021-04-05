@@ -246,13 +246,11 @@ if ( empty( $user ) ) : ?>
 				<div class="ic-section-content">
 					<?php
 					if ( ! empty( $groups ) ) :
-						echo '<table><tbody>';
+						echo '<ul>';
 						foreach ( $groups as $group_id ): ?>
-							<tr>
-								<td style="text-align:left;"><?php echo group_link( $group_id ) ?></td>
-							</tr>
+							<li><?php echo group_link( $group_id ) ?>
 						<?php endforeach;
-						echo '</tbody></table>'; ?>
+						echo '</ul>'; ?>
 					<?php else: _e( 'No groups joined yet!', 'groundhogg-buddyboss' ); endif; ?>
 				</div>
 			</div>
