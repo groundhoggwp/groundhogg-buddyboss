@@ -55,14 +55,6 @@ class Plugin extends Extension {
 		return 52477;
 	}
 
-	/**
-	 * @param \Groundhogg\Admin\Contacts\Info_Cards $cards
-	 */
-	public function register_contact_info_cards1( $cards ) {
-//		$cards->e = new Buddy_Boss_Info_Card();
-		new Buddy_Boss_Info_Card( $cards );
-	}
-
 
 	public function register_bulk_jobs( $manager ) {
 		$manager->sync_groups_and_member_types = new Sync_Groups_And_Member_Types();
