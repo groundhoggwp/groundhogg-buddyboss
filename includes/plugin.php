@@ -40,10 +40,6 @@ class Plugin extends Extension {
 		new Groundhogg_Bb_Groups();
 
 		$this->bb_replacement = new Bb_Replacements();
-
-//		if ( is_admin() ) {
-//			new Buddy_Boss_Tab();
-//		}
 	}
 
 	/**
@@ -103,7 +99,7 @@ class Plugin extends Extension {
     public function register_contact_info_cards( $cards ) {
 		
 		$cards::register( 'buddyboss-new-info-card', 'BuddyBoss', function ( $contact ) {
-            include( __DIR__ . '/../admin/cards/buddyboss.php' );
+            include __DIR__ . '/../admin/cards/buddyboss.php';
         } );
     }
 }
