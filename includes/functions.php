@@ -13,6 +13,8 @@ use function Groundhogg\get_contactdata;
 use function Groundhogg\get_mappable_fields;
 use function Groundhogg\get_request_var;
 use function Groundhogg\html;
+use function Groundhogg\notices;
+use function Groundhogg\Notices\add_notice;
 use function Groundhogg\update_contact_with_map;
 use function GroundhoggAdvancedPreferences\get_preference_tag_ids;
 
@@ -287,7 +289,8 @@ function update_contact_fields_on_xprofile_save( $field_data ) {
 		return;
 	}
 
-	update_contact_from_xprofile_field_map( $contact, $field_data->field_id, $field_data->value );
+	// We might have to unserialize the data that comes through here because it's serialized by BB
+	update_contact_from_xprofile_field_map( $contact, $field_data->field_id, maybe_unserialize( $field_data->value ) );
 }
 
 /**
