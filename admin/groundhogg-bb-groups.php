@@ -3,6 +3,8 @@
 namespace GroundhoggBuddyBoss\Admin;
 
 use Groundhogg\Contact;
+use Groundhogg\Tag;
+use GroundhoggBuddyBoss\Plugin;
 use function Groundhogg\get_array_var;
 use function Groundhogg\get_request_var;
 use function Groundhogg\html;
@@ -14,10 +16,12 @@ class Groundhogg_Bb_Groups {
 	public function __construct() {
 		add_action( 'bp_groups_admin_meta_boxes', [ $this, 'register_meta_boxes' ] );
 		add_action( 'bp_group_admin_edit_after', [ $this, 'save_tags_data' ], 10, 1 );
+
 		add_action( 'groups_join_group', [ $this, 'add_group_tag' ], 10, 2 );
 		add_action( 'groups_leave_group', [ $this, 'remove_group_tag' ], 10, 2 );
 		add_action( 'groups_member_after_save', [ $this, 'learn_dash_sync_add' ], 10, 1 );
 		add_action( 'groups_member_after_remove', [ $this, 'learn_dash_sync_remove' ], 10, 1 );
+
 //		add_action( 'bp_ld_sync/learndash_group_user_added' , [$this, 'add_group_tag'] , 10 , 2  );
 //		add_action( 'bp_ld_sync/learndash_group_user_removed' , [$this, 'remove_group_tag'] , 10 , 2  );
 
@@ -29,7 +33,12 @@ class Groundhogg_Bb_Groups {
 	 * @param $data
 	 */
 	function learn_dash_sync_add( $data ) {
-		$this->add_group_tag( absint( get_array_var( $data, 'group_id' ) ), absint( get_array_var( $data, 'user_id' ) ) );
+
+		if ( did_action( 'groups_join_group' ) ){
+			return;
+		}
+
+		$this->add_group_tag( $data->group_id, $data->user_id );
 	}
 
 	/**
@@ -38,7 +47,12 @@ class Groundhogg_Bb_Groups {
 	 * @param $data
 	 */
 	function learn_dash_sync_remove( $data ) {
-		$this->remove_group_tag( absint( get_array_var( $data, 'group_id' ) ), absint( get_array_var( $data, 'user_id' ) ) );
+
+		if ( did_action( 'groups_leave_group' ) ){
+			return;
+		}
+
+		$this->remove_group_tag( $data->group_id, $data->user_id );
 	}
 
 	/**
@@ -49,11 +63,26 @@ class Groundhogg_Bb_Groups {
 	 */
 	public function remove_group_tag( $group_id, $user_id ) {
 
-		$contact = new Contact( absint($user_id ), true );
+		$contact = new Contact( $user_id, true );
 
-		if ( $contact && $contact->exists() && (bool) groups_get_groupmeta(absint( $group_id ), 'groundhogg_reverse_tags', true ) ) {
-			$contact->remove_tag( groups_get_groupmeta(absint( $group_id ), 'groundhogg_tags', true ) );
-			$contact->apply_tag( groups_get_groupmeta(absint( $group_id ), 'groundhogg_tags_remove', true ) );
+		if ( ! $contact->exists() ) {
+			return;
+		}
+
+		$reverse_tags = (bool) groups_get_groupmeta( $group_id, 'groundhogg_reverse_tags', true );
+
+		if ( $reverse_tags ) {
+
+			$apply_tags  = groups_get_groupmeta( $group_id, 'groundhogg_tags', true );
+			$remove_tags = groups_get_groupmeta( $group_id, 'groundhogg_tags_remove', true );
+
+			if ( $apply_tags ) {
+				$contact->apply_tag( $apply_tags );
+			}
+
+			if ( $remove_tags ) {
+				$contact->remove_tag( groups_get_groupmeta( $group_id, 'groundhogg_tags_remove', true ) );
+			}
 		}
 	}
 
@@ -64,11 +93,20 @@ class Groundhogg_Bb_Groups {
 	 */
 	public function add_group_tag( $group_id, $user_id ) {
 
-		$contact = new Contact( absint( $user_id ), true );
-		if ( $contact && $contact->exists() && absint( $group_id ) ) {
+		$contact = new Contact( $user_id, true );
 
-			$contact->apply_tag( groups_get_groupmeta( absint( $group_id ), 'groundhogg_tags', true ) );
-			$contact->remove_tag( groups_get_groupmeta( absint( $group_id ), 'groundhogg_tags_remove', true ) );
+		if ( $contact->exists() && $group_id ) {
+
+			$apply_tags  = groups_get_groupmeta( $group_id, 'groundhogg_tags', true );
+			$remove_tags = groups_get_groupmeta( $group_id, 'groundhogg_tags_remove', true );
+
+			if ( $apply_tags ) {
+				$contact->apply_tag( $apply_tags );
+			}
+
+			if ( $remove_tags ) {
+				$contact->remove_tag( $remove_tags );
+			}
 		}
 
 	}
@@ -91,14 +129,18 @@ class Groundhogg_Bb_Groups {
 	 */
 	public function meta_box_callback( $post ) {
 
+
 		$post_id = get_request_var( 'gid' );
+
+		$add_tags    = groups_get_groupmeta( $post_id, 'groundhogg_tags', true );
+		$remove_tags = groups_get_groupmeta( $post_id, 'groundhogg_tags_remove', true );
 
 		echo html()->wrap( html()->wrap( __( 'Add Tags', 'groundhogg-buddyboss' ), 'b' ), 'h3' );
 
 		echo html()->tag_picker( [
 			'name'     => 'groundhogg_tags[]',
 			'id'       => 'groundhogg_tags',
-			'selected' => groups_get_groupmeta( $post_id, 'groundhogg_tags', true )
+			'selected' => $add_tags
 		] );
 
 		echo html()->description( __( 'The selected tags will be added to the contact when they join the group.', 'groundhogg-buddyboss' ) );
@@ -108,7 +150,7 @@ class Groundhogg_Bb_Groups {
 		echo html()->tag_picker( [
 			'name'     => 'groundhogg_tags_remove[]',
 			'id'       => 'groundhogg_tags_remove',
-			'selected' => groups_get_groupmeta( $post_id, 'groundhogg_tags_remove', true )
+			'selected' => $remove_tags
 		] );
 
 		echo html()->description( __( 'The selected tags will be removed from the contact when they leave the group.', 'groundhogg-buddyboss' ) );
@@ -132,6 +174,7 @@ class Groundhogg_Bb_Groups {
 
 		groups_update_groupmeta( $group_id, 'groundhogg_tags', validate_tags( get_request_var( 'groundhogg_tags', [] ) ) );
 		groups_update_groupmeta( $group_id, 'groundhogg_tags_remove', validate_tags( get_request_var( 'groundhogg_tags_remove', [] ) ) );
+
 		if ( get_request_var( 'groundhogg_reverse_tags' ) ) {
 			groups_update_groupmeta( $group_id, 'groundhogg_reverse_tags', true );
 		} else {

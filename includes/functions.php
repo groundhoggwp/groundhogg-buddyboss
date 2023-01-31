@@ -7,12 +7,14 @@ use Groundhogg\Contact;
 use Groundhogg\Plugin;
 use Groundhogg\Preferences;
 use Groundhogg\Tag;
+use function Groundhogg\after_form_submit_handler;
 use function Groundhogg\generate_contact_with_map;
 use function Groundhogg\get_array_var;
 use function Groundhogg\get_contactdata;
 use function Groundhogg\get_mappable_fields;
 use function Groundhogg\get_request_var;
 use function Groundhogg\html;
+use function Groundhogg\is_a_contact;
 use function Groundhogg\notices;
 use function Groundhogg\Notices\add_notice;
 use function Groundhogg\update_contact_with_map;
@@ -227,7 +229,13 @@ function create_contact_using_buddyboss() {
 
 	$field_map = array_merge( (array) get_option( 'gh_bb_field_map' ), [ 'signup_email' => 'email' ] );
 
-	generate_contact_with_map( $_POST, $field_map );
+	$contact = generate_contact_with_map( $_POST, $field_map );
+
+    if ( ! is_a_contact( $contact ) ){
+        return;
+    }
+
+    after_form_submit_handler( $contact );
 }
 
 add_action( 'xprofile_field_after_sidebarbox', __NAMESPACE__ . '\add_groundhogg_field_picker', 10 );
