@@ -71,6 +71,10 @@ class Plugin extends Extension {
 		];
 	}
 
+	protected function dependent_plugins_are_installed() {
+		return function_exists( 'buddypress' );
+	}
+
 	/**
 	 * @return string
 	 */
